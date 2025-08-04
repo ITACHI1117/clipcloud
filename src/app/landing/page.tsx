@@ -142,16 +142,6 @@ export default function CloudClipLanding() {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-6">
-              {["Discover", "Create", "Trending", "Pricing"].map((item) => (
-                <a
-                  key={item}
-                  href={`#${item.toLowerCase()}`}
-                  className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
-                >
-                  {item}
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-chart-2 transition-all duration-300 group-hover:w-full"></span>
-                </a>
-              ))}
               <div className="flex items-center space-x-4 ml-6">
                 <Button
                   onClick={() => router.push("/auth/login")}
@@ -191,24 +181,6 @@ export default function CloudClipLanding() {
         {isMenuOpen && (
           <div className="md:hidden border-t border-border/50 bg-background/95 backdrop-blur-xl">
             <div className="px-4 py-4 space-y-3">
-              <a
-                href="#features"
-                className="block px-3 py-2 text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Features
-              </a>
-              <a
-                href="#creators"
-                className="block px-3 py-2 text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Creators
-              </a>
-              <a
-                href="#pricing"
-                className="block px-3 py-2 text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Pricing
-              </a>
               <div className="pt-2 space-y-2">
                 <Button
                   onClick={() => router.push("/auth/login")}
@@ -278,6 +250,7 @@ export default function CloudClipLanding() {
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
                 <Button
                   size="lg"
+                  onClick={() => router.push("/auth/signup")}
                   className="group relative overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold shadow-2xl transition-all duration-300 hover:shadow-blue-500/25 hover:scale-[1.02]"
                 >
                   <span className="relative z-10 flex items-center">
