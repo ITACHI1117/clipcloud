@@ -11,6 +11,7 @@ import {
   Search,
   Video,
   Volume2,
+  VolumeOff,
   VolumeX,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -137,7 +138,7 @@ export const VideoPlayer = ({
                   {/* CloudClip */}
                 </h1>
                 {user && user.role == "Creator" ? (
-                  <p className="text-white text-sm">Creator</p>
+                  <p className="text-white text-sm"></p>
                 ) : (
                   <p className="text-white font-bold text-sm">
                     {/* All videos in one Cloud 🌥️ */}
@@ -159,10 +160,11 @@ export const VideoPlayer = ({
                 </button>
                 {user?.role == "Creator" ? (
                   <button
-                    onClick={() => router.push("creator/my-dashboard")}
-                    className="text-white p-1 px-4 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 rounded-full transition-colors"
+                    onClick={() => setIsDrawerOpen((prev) => !prev)}
+                    // onClick={() => router.push("creator/my-dashboard")}
+                    className="text-white p-1 transition-colors"
                   >
-                    My Cloud
+                    <EllipsisVertical />
                   </button>
                 ) : (
                   <button
@@ -385,7 +387,7 @@ export const VideoPlayer = ({
                       transition={{ type: "spring", stiffness: 500 }}
                     >
                       {isMuted ? (
-                        <VolumeX className="w-7 h-7" />
+                        <VolumeOff className="w-7 h-7" />
                       ) : (
                         <Volume2 className="w-7 h-7" />
                       )}
@@ -479,6 +481,7 @@ export const VideoPlayer = ({
       <BottomDrawer
         isDrawerOpen={isDrawerOpen}
         setIsDrawerOpen={setIsDrawerOpen}
+        user={user}
       />
     </div>
   );

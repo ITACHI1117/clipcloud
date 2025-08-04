@@ -231,53 +231,94 @@ export default function CloudClipLanding() {
       </nav>
 
       {/* Hero Section - 3D tilt effect */}
-      <section className="relative pt-32 pb-20 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <section className="relative min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 overflow-hidden">
+        {/* Animated background elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-10 w-2 h-2 bg-blue-400 rounded-full animate-pulse opacity-60"></div>
+          <div className="absolute top-40 right-20 w-1 h-1 bg-purple-400 rounded-full animate-ping opacity-40"></div>
+          <div className="absolute bottom-32 left-20 w-3 h-3 bg-cyan-400 rounded-full animate-bounce opacity-50"></div>
+          <div className="absolute top-60 left-1/3 w-1.5 h-1.5 bg-pink-400 rounded-full animate-pulse opacity-50"></div>
+          <div className="absolute bottom-20 right-32 w-2 h-2 bg-emerald-400 rounded-full animate-ping opacity-30"></div>
+        </div>
+
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
+          <div className="grid lg:grid-cols-2 gap-16 items-center min-h-[80vh]">
             {/* Left Column - Content */}
-            <div className="text-left">
-              <Badge className="mb-6 px-4 py-1.5 text-xs font-medium bg-primary/10 text-primary border-primary/20 animate-fade-in">
-                <Zap className="w-3 h-3 mr-2 animate-pulse" />
-                Join the movement
-              </Badge>
+            <div className="text-left space-y-8">
+              {/* New headline */}
+              <div className="space-y-4">
+                <h1 className="text-6xl sm:text-5xl lg:text-8xl font-black tracking-tight leading-none">
+                  <span className="block text-white mb-2">Turn</span>
+                  <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent animate-gradient-x">
+                    Ideas
+                  </span>
+                  <span className="block text-white">Into Gold</span>
+                </h1>
 
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-6 leading-tight animate-fade-in [animation-delay:100ms]">
-                <span className="bg-gradient-to-r from-primary to-chart-2 bg-clip-text text-transparent">
-                  Create
-                </span>{" "}
-                viral clips <br className="hidden sm:block" />
-                in seconds
-              </h1>
-
-              <p className="text-xl text-muted-foreground mb-8 max-w-xl leading-relaxed animate-fade-in [animation-delay:200ms]">
-                The next-gen platform for short-form content. Powered by AI
-                tools to make your content stand out from the crowd.
-              </p>
-
-              <div className="flex flex-wrap gap-4 mb-12 animate-fade-in [animation-delay:300ms]">
-                <Button
-                  onClick={() => router.push("/auth/signup")}
-                  size="lg"
-                  className="cursor-pointer bg-gradient-to-r from-primary to-chart-2 text-white hover:shadow-lg transition-all hover:scale-[1.02]"
-                >
-                  Get Started Free
-                </Button>
+                <div className="flex items-center gap-2 text-lg text-slate-300">
+                  <Star className="w-5 h-5 text-yellow-400 fill-current" />
+                  <span>The #1 platform for viral content</span>
+                </div>
               </div>
 
-              {/* Stats with counter animations */}
+              {/* New description */}
+              <p className="text-xl text-slate-300 leading-relaxed max-w-2xl">
+                Transform your raw footage into scroll-stopping content with our
+                AI-powered editing suite. Join{" "}
+                <span className="text-blue-400 font-semibold">
+                  2.4M creators
+                </span>{" "}
+                who've already gone viral with Cloudclip.
+              </p>
+
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                <Button
+                  size="lg"
+                  className="group relative overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold shadow-2xl transition-all duration-300 hover:shadow-blue-500/25 hover:scale-[1.02]"
+                >
+                  <span className="relative z-10 flex items-center">
+                    Start Creating Free
+                    <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </Button>
+              </div>
             </div>
 
-            {/* Right Column - 3D Phone Mockup */}
-            <div className="relative flex justify-center lg:justify-end animate-float [animation-delay:500ms]">
-              <div className="relative w-[300px] md:w-[400px] h-[600px] perspective-1000">
-                {/* Phone container with 3D transform */}
-                <div className="relative w-full h-full transform-style-preserve-3d transition-transform duration-700 hover:rotate-y-15">
-                  {/* Phone front */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-black rounded-[40px] p-2 shadow-2xl backface-hidden">
-                    <div className="w-full h-full bg-black rounded-[36px] overflow-hidden relative">
-                      {/* Video feed with parallax effect */}
+            {/* Right Column - Enhanced 3D Phone Mockup */}
+            <div className="relative flex justify-center lg:justify-end">
+              <div className="relative">
+                {/* Floating elements with new designs */}
+                <div className="absolute -top-16 -left-12 w-20 h-20 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-2xl animate-float rotate-12 backdrop-blur-sm border border-blue-400/20">
+                  <Video className="w-8 h-8 text-white" />
+                </div>
 
-                      <div className="absolute inset-0 flex items-center justify-center">
+                <div className="absolute -bottom-8 -right-8 w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-2xl animate-float-slow [animation-delay:1s] -rotate-12">
+                  <Users className="w-6 h-6 text-white" />
+                </div>
+
+                <div className="absolute top-1/2 -left-16 w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full flex items-center justify-center shadow-xl animate-pulse">
+                  <Globe className="w-6 h-6 text-white" />
+                </div>
+
+                {/* Main phone container */}
+                <div className="relative w-[320px] md:w-[380px] h-[640px] md:h-[720px]">
+                  {/* Phone shadow */}
+                  <div className="absolute inset-0 bg-black/40 rounded-[48px] blur-2xl transform translate-y-8 translate-x-4"></div>
+
+                  {/* Phone body */}
+                  <div className="relative w-full h-full bg-gradient-to-br from-slate-800 via-slate-900 to-black rounded-[48px] p-3 shadow-2xl border border-slate-700/50 backdrop-blur-sm">
+                    {/* Screen */}
+                    <div className="w-full h-full bg-black rounded-[42px] overflow-hidden relative">
+                      {/* Dynamic island */}
+                      <div className="absolute top-6 left-1/2 transform -translate-x-1/2 w-32 h-6 bg-black rounded-full z-20"></div>
+
+                      {/* Video content */}
+                      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800">
                         <video
                           src="videos/cloudclip2.mp4"
                           controls={false}
@@ -285,34 +326,88 @@ export default function CloudClipLanding() {
                           muted={true}
                           loop
                           playsInline
-                          className="w-full h-full object-cover absolute"
+                          className="w-full h-full object-cover"
                         />
-                        <div className="text-white text-center px-6 transform translate-z-20">
-                          <PlayCircle className="w-16 h-16 mx-auto mb-4 animate-pulse" />
-                          {/* <h3 className="text-xl font-bold mb-2">
-                            Your Next Viral Clip
-                          </h3>
-                          <p className="text-sm opacity-80">Tap to create</p> */}
+
+                        {/* Overlay UI elements */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent">
+                          <div className="absolute bottom-8 left-4 right-4 text-white">
+                            <div className="flex items-center justify-between mb-4">
+                              <div className="flex items-center gap-2"></div>
+                            </div>
+                            <div className="flex items-center justify-between text-xs opacity-75"></div>
+                          </div>
                         </div>
                       </div>
                     </div>
+
+                    {/* Phone reflection */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[48px] pointer-events-none"></div>
                   </div>
-
-                  {/* Phone side (3D effect) */}
-                  <div className="absolute inset-y-0 left-0 w-4 bg-gray-800 rounded-l-[8px] transform-origin-left rotate-y-90 translate-x-[-4px]"></div>
-                </div>
-
-                {/* Floating elements */}
-                <div className="absolute -top-8 -left-8 w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg animate-float-slow">
-                  <TrendingUp className="w-6 h-6 text-white" />
-                </div>
-                <div className="absolute -bottom-6 -right-6 w-14 h-14 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg animate-float-slow [animation-delay:2s]">
-                  <Heart className="w-5 h-5 text-white" />
                 </div>
               </div>
             </div>
           </div>
         </div>
+        {/* Custom animations */}
+        <style jsx>{`
+          @keyframes gradient-x {
+            0%,
+            100% {
+              background-size: 200% 200%;
+              background-position: left center;
+            }
+            50% {
+              background-size: 200% 200%;
+              background-position: right center;
+            }
+          }
+
+          @keyframes float {
+            0%,
+            100% {
+              transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+              transform: translateY(-20px) rotate(5deg);
+            }
+          }
+
+          @keyframes float-slow {
+            0%,
+            100% {
+              transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+              transform: translateY(-10px) rotate(-5deg);
+            }
+          }
+
+          @keyframes spin-slow {
+            from {
+              transform: rotate(0deg);
+            }
+            to {
+              transform: rotate(360deg);
+            }
+          }
+
+          .animate-gradient-x {
+            animation: gradient-x 3s ease infinite;
+          }
+
+          .animate-float {
+            animation: float 6s ease-in-out infinite;
+          }
+
+          .animate-float-slow {
+            animation: float-slow 8s ease-in-out infinite;
+          }
+
+          .animate-spin-slow {
+            animation: spin-slow 3s linear infinite;
+          }
+        `}</style>
       </section>
       {/* Video Showcase Section - Parallax effect */}
       <section className="py-24 relative overflow-hidden">

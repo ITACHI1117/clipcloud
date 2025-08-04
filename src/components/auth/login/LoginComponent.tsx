@@ -207,7 +207,7 @@ export default function LoginComponent() {
                 <Button
                   variant="link"
                   className="text-muted-foreground p-0 h-auto text-xs hover:text-primary"
-                  onClick={() => router.push("/auth/forgot-password")}
+                  // onClick={() => router.push("/auth/forgot-password")}
                 >
                   Forgot password?
                 </Button>

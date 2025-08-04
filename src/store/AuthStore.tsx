@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 import { access } from "fs";
 import { useRouter } from "next/navigation";
 
-interface User {
+export interface User {
   id: string;
   firstname: string;
   lastname: string;
