@@ -129,12 +129,15 @@ export const VideoPlayer = ({
               onClick={() => setIsDrawerOpen((prev) => !prev)}
               className="w-6 h-6 text-white cursor-pointer hover:text-gray-300"
             />
-            <div className="w-6 h-6 bg-gray-700 rounded-full"></div>
+            {/* <div className="w-6 h-6 bg-gray-700 rounded-full"></div> */}
             <Search
               onClick={() => router.push("/search")}
               className="w-6 h-6 text-white cursor-pointer hover:text-gray-300"
             />
-            <Plus className="w-6 h-6 text-white cursor-pointer hover:text-gray-300" />
+            <Plus
+              onClick={() => router.push("/creator/upload")}
+              className="w-6 h-6 text-white cursor-pointer hover:text-gray-300"
+            />
           </div>
           {/* Main video area */}
           <div className="flex-1 flex">

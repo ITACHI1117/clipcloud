@@ -231,14 +231,12 @@ export default function CreatorDashboard() {
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
-              <div className="hidden md:flex w-10 h-10 bg-gradient-to-br from-primary to-chart-2 rounded-xl flex items-center justify-center">
-                <Video className="w-6 h-6 text-white" />
+
+              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                <div className="text-white font-bold text-sm">CC</div>
               </div>
               <div>
-                <h1 className="text-md font-bold">My Dashboard</h1>
-                <p className="hidden text-sm md:flex text-muted-foreground">
-                  Manage your content
-                </p>
+                <h1 className="text-md font-bold">Dashboard</h1>
               </div>
             </div>
           </div>
@@ -250,67 +248,9 @@ export default function CreatorDashboard() {
               <Plus className="w-4 h-4" />
               {/* <span className="hidden ">Upload</span> */}
             </button>
-            <button
-              onClick={handleLogOut}
-              className="text-black p-1 px-4 bg-white hover:bg-white/10 rounded-full border-gradient-to-r border-4 cursor-pointer from-primary to-chart-2 "
-            >
-              Log out
-              {/* <LogOut className="w-6 h-6" /> */}
-            </button>
           </div>
         </div>
       </header>
-
-      {/* Stats Overview */}
-      {/* <div className="px-6 py-6 border-b border-border">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-card rounded-lg p-4">
-            <div className="flex items-center space-x-2 mb-2">
-              <Eye className="w-4 h-4 text-blue-500" />
-              <span className="text-sm font-medium">Total Views</span>
-            </div>
-            <p className="text-2xl font-bold">
-              {formatNumber(totalStats.views)}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              +12% from last month
-            </p>
-          </div>
-
-          <div className="bg-card rounded-lg p-4">
-            <div className="flex items-center space-x-2 mb-2">
-              <Heart className="w-4 h-4 text-red-500" />
-              <span className="text-sm font-medium">Total Likes</span>
-            </div>
-            <p className="text-2xl font-bold">
-              {formatNumber(totalStats.likes)}
-            </p>
-            <p className="text-xs text-muted-foreground">+8% from last month</p>
-          </div>
-
-          <div className="bg-card rounded-lg p-4">
-            <div className="flex items-center space-x-2 mb-2">
-              <MessageCircle className="w-4 h-4 text-green-500" />
-              <span className="text-sm font-medium">Comments</span>
-            </div>
-            <p className="text-2xl font-bold">
-              {formatNumber(totalStats.comments)}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              +15% from last month
-            </p>
-          </div>
-
-          <div className="bg-card rounded-lg p-4">
-            <div className="flex items-center space-x-2 mb-2">
-              <Video className="w-4 h-4 text-purple-500" />
-              <span className="text-sm font-medium">Videos</span>
-            </div>
-            <p className="text-2xl font-bold">{userVideos.length}</p>
-            <p className="text-xs text-muted-foreground">Total uploaded</p>
-          </div>
-        </div>
-      </div> */}
 
       {/* Controls */}
       <div className="px-6 py-4 border-b border-border">
@@ -325,19 +265,6 @@ export default function CreatorDashboard() {
                 className="pl-10 pr-4 py-2 border border-border rounded-lg bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
-
-            {/* <select
-              value={filterGenre}
-              onChange={(e) => setFilterGenre(e.target.value)}
-              className="px-3 py-2 border border-border rounded-lg bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-            >
-              <option value="all">All Categories</option>
-              {genres.map((genre) => (
-                <option key={genre} value={genre}>
-                  {genre}
-                </option>
-              ))}
-            </select> */}
           </div>
 
           <div className="flex items-center space-x-2">
@@ -414,7 +341,7 @@ export default function CreatorDashboard() {
                           poster={
                             video.thumbnailUrl
                               ? video.thumbnailUrl
-                              : "/images/defaultThumb.png"
+                              : "/images/woman.jpg"
                           }
                           className="w-full h-full object-cover"
                           muted
@@ -423,13 +350,6 @@ export default function CreatorDashboard() {
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
                           <Play className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
                         </div>
-                        {/* <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="relative">
-                          <button className="p-1 bg-black/50 hover:bg-black/70 text-white rounded-full">
-                            <MoreVertical className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div> */}
                       </div>
 
                       <div className="p-4">

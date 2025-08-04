@@ -1,21 +1,20 @@
 "use client";
-import { useEffect } from "react";
-import { useGetAllVideos } from "@/queries/video.queries";
-import VideoFeedSkeleton from "@/components/VideoFeedSkeleton";
+import VideoFeedSkeleton, {
+  DesktopVideoSkeletonLoader,
+} from "@/components/VideoFeedSkeleton";
 import { VideoPlayer } from "@/components/VideoPlayer";
 import { useAllVideos } from "@/hooks/useAllVideos";
-import { toast } from "sonner";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 export default function HTML5VideoFeed() {
   const { AllVideos } = useAllVideos();
+  const isDesktop = useMediaQuery("(min-width: 768px)");
 
-  useEffect(() => {
-    toast.info("Video muted? ", {
-      description: "Click the Unmute button at the bottom of the Screen😉",
-    });
-  }, [AllVideos.isSuccess]);
-
-  if (AllVideos.isPending) return <VideoFeedSkeleton />;
+  if (AllVideos.isPending) {
+    if (isDesktop) {
+      return <DesktopVideoSkeletonLoader />;
+    } else return <VideoFeedSkeleton />;
+  }
 
   return <VideoPlayer AllVideos={AllVideos} />;
 }
