@@ -3,16 +3,22 @@ import { getUser, LogUserOut } from "@/store/AuthStore";
 import { UseQueryResult } from "@tanstack/react-query";
 import {
   ArrowLeft,
-  Cloud,
-  EllipsisVertical,
   Heart,
   MessageCircle,
   Play,
   Search,
-  Video,
   Volume2,
   VolumeOff,
-  VolumeX,
+  ThumbsDown,
+  Share,
+  Zap,
+  MoreHorizontal,
+  Pause,
+  Maximize,
+  Menu,
+  Plus,
+  Mic,
+  ThumbsUp,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -38,25 +44,18 @@ export const VideoPlayer = ({
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [selectedVideoId, setSelectedVideoId] = useState("");
-  const [isMobile, setIsMobile] = useState("");
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [showControls, setShowControls] = useState(true);
   const router = useRouter();
-  const render = "once";
 
   // user details
   const user = getUser();
 
-  // render toast
-
   const {
-    // LikeVideo,
-    // ref
     containerRef,
     videoRefs,
-
-    // stateActions
     setVolume,
     setVideoStates,
-    //   state
     likedVideos,
     followedUsers,
     videoDurations,
@@ -67,10 +66,7 @@ export const VideoPlayer = ({
     isMuted,
     isPlaying,
     currentVideoIndex,
-    // functions
-    // toggleLike,
     toggleFollow,
-    // event handlers
     handleScroll,
     handleVideoLoaded,
     handleVideoPlay,
@@ -90,8 +86,21 @@ export const VideoPlayer = ({
   const Comments = useGetComments(videoId, { enabled: true });
 
   useEffect(() => {
-    Likes.isSuccess && console.log(Likes.data);
-  }, [Likes.isSuccess]);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Auto-hide controls on mobile
+  useEffect(() => {
+    if (isMobile) {
+      const timer = setTimeout(() => setShowControls(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isMobile, showControls]);
 
   const isVideoLiked = (Likes, LikeVideo) => {
     if (LikeVideo?.data?.isLiked !== undefined) return LikeVideo.data.isLiked;
@@ -99,110 +108,265 @@ export const VideoPlayer = ({
       return Likes.data.isLiked;
     return false;
   };
-  const Screen = window.innerWidth;
-  useEffect(() => {
-    const isMobile = window.innerWidth < 768;
-    setIsMobile(isMobile);
-  }, [Screen]);
 
   if (isSearchOpen) {
     return <SearchComponent setIsSearchOpen={setIsSearchOpen} />;
   }
 
+  const currentVideo = AllVideos.data?.[currentVideoIndex];
+
   return (
-    <div className="pb-safe h-full bg-black relative overflow-hidden pb-[env(safe-area-inset-bottom)]">
-      {/* Top Navigation - Cloud-themed */}
-      <div className="absolute -top-2 left-0 right-0 z-30 bg-gradient-to-b from-black/80 to-transparent pt-[env(safe-area-inset-top)]">
-        <div className="flex  items-center justify-between p-4 pt-5">
-          <div className="flex flex-col items-center justify-center text-center space-x-4">
-            {view != "video" ? (
-              <button className="text-white p-2 hover:bg-white/10 rounded-full transition-colors">
-                <div className="relative">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-full flex items-center justify-center shadow-lg">
-                    <Cloud className="w-6 h-6 text-white" />
-                  </div>
-                </div>
-              </button>
-            ) : (
-              <button
-                onClick={() => setView && setView("dashboard")}
-                className="p-2 hover:bg-white/10 rounded-full transition-colors"
-              >
-                <ArrowLeft className="w-8 h-8 text-white" />
-              </button>
-            )}
-
-            {view != "video" && (
-              <div className="">
-                <h1 className="text-white text-md md:text-lg font-bold">
-                  {/* CloudClip */}
-                </h1>
-                {user && user.role == "Creator" ? (
-                  <p className="text-white text-sm"></p>
-                ) : (
-                  <p className="text-white font-bold text-sm">
-                    {/* All videos in one Cloud 🌥️ */}
-                  </p>
-                )}
-              </div>
-            )}
+    <div className="h-screen bg-black relative overflow-hidden">
+      {/* Desktop/Tablet Layout */}
+      {!isMobile ? (
+        <div className="flex h-full">
+          {/* Left sidebar - Desktop only */}
+          <div className="w-16 bg-black border-r border-gray-800 flex flex-col items-center py-4 space-y-6">
+            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+              <div className="text-white font-bold text-sm">CC</div>
+            </div>
+            <Menu
+              onClick={() => setIsDrawerOpen((prev) => !prev)}
+              className="w-6 h-6 text-white cursor-pointer hover:text-gray-300"
+            />
+            <div className="w-6 h-6 bg-gray-700 rounded-full"></div>
+            <Search
+              onClick={() => router.push("/search")}
+              className="w-6 h-6 text-white cursor-pointer hover:text-gray-300"
+            />
+            <Plus className="w-6 h-6 text-white cursor-pointer hover:text-gray-300" />
           </div>
+          {/* Main video area */}
+          <div className="flex-1 flex">
+            {/* Video container */}
+            <div className="flex-1 relative bg-black flex items-center justify-center">
+              <div
+                ref={containerRef}
+                className="relative w-full max-w-md h-full overflow-y-auto snap-y snap-mandatory"
+                onScroll={handleScroll}
+                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+              >
+                {AllVideos.data?.map((video, index) => (
+                  <div
+                    key={video.id}
+                    className="w-full h-full snap-start relative bg-black flex items-center justify-center"
+                  >
+                    {videosToLoad.has(index) ? (
+                      <div className="relative w-full h-full max-w-md">
+                        <video
+                          ref={(el) => (videoRefs.current[index] = el)}
+                          src={video?.videoUrl}
+                          className="w-full h-full object-contain rounded-lg"
+                          muted={isMuted}
+                          loop
+                          playsInline
+                          preload="metadata"
+                          onLoadedData={() => handleVideoLoaded(index)}
+                          onPlay={() => handleVideoPlay(index)}
+                          onPause={() => handleVideoPause(index)}
+                        />
 
-          {/* Right side actions */}
-          <div className="flex items-center space-x-1 absolute top-6 right-2">
-            {view != "video" && (
-              <>
+                        {/* Video Controls Overlay */}
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                          <div className="absolute top-4 left-4 right-4 flex justify-between items-center">
+                            <div className="text-white text-sm bg-black/50 px-2 py-1 rounded">
+                              {video.title}
+                            </div>
+                            <div className="flex space-x-2">
+                              <button className="p-2 bg-black/50 rounded-full text-white hover:bg-black/70">
+                                <Pause className="w-4 h-4" />
+                              </button>
+                              <button
+                                className="p-2 bg-black/50 rounded-full text-white hover:bg-black/70"
+                                onClick={toggleMute}
+                              >
+                                {isMuted ? (
+                                  <VolumeOff className="w-4 h-4" />
+                                ) : (
+                                  <Volume2 className="w-4 h-4" />
+                                )}
+                              </button>
+                              <button className="p-2 bg-black/50 rounded-full text-white hover:bg-black/70">
+                                <Maximize className="w-4 h-4" />
+                              </button>
+                              <button className="p-2 bg-black/50 rounded-full text-white hover:bg-black/70">
+                                <MoreHorizontal className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+
+                          {!isPlaying && index === currentVideoIndex && (
+                            <button
+                              onClick={togglePlayPause}
+                              className="bg-black/60 rounded-full p-4 hover:bg-black/80 transition-colors"
+                            >
+                              <Play className="w-8 h-8 text-white fill-white" />
+                            </button>
+                          )}
+                        </div>
+
+                        {/* Progress bar at bottom of video */}
+                        {videoProgress[index] && videoDurations[index] && (
+                          <div className="absolute bottom-2 left-2 right-2">
+                            <div
+                              className="w-full bg-white/30 rounded-full h-1 cursor-pointer"
+                              onClick={(e) => {
+                                const rect =
+                                  e.currentTarget.getBoundingClientRect();
+                                const percent =
+                                  (e.clientX - rect.left) / rect.width;
+                                const seekTime =
+                                  percent * videoDurations[index];
+                                seekTo(index, seekTime);
+                              }}
+                            >
+                              <div
+                                className="bg-red-500 rounded-full h-1 transition-all duration-300"
+                                style={{
+                                  width: `${
+                                    (videoProgress[index].played || 0) * 100
+                                  }%`,
+                                }}
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="w-full max-w-md h-96 bg-gray-900 rounded-lg flex items-center justify-center">
+                        <div className="text-white/60 text-center">
+                          <div className="text-sm">{video.title}</div>
+                          <div className="text-xs mt-1">Loading...</div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right sidebar with actions */}
+            <div className="w-16 flex flex-col items-center justify-center space-y-6 py-8">
+              {/* Like button */}
+              <motion.div
+                className="flex flex-col items-center"
+                whileTap={{ scale: 0.9 }}
+              >
                 <button
-                  onClick={() => router.push("/search")}
-                  className="text-white p-2 hover:bg-white/10 rounded-full transition-colors"
+                  className={`w-12 h-12 rounded-full flex items-center justify-center hover:bg-gray-800 ${
+                    isVideoLiked(Likes, LikeVideo)
+                      ? "bg-blue-500 text-white-"
+                      : "text-white"
+                  } transition-colors`}
+                  onClick={() => LikeVideo.mutate()}
                 >
-                  <Search className="w-6 h-6" />
+                  <ThumbsUp className={`w-6 h-6 `} />
                 </button>
-                {user?.role == "Creator" ? (
-                  <button
-                    onClick={() => setIsDrawerOpen((prev) => !prev)}
-                    // onClick={() => router.push("creator/my-dashboard")}
-                    className="text-white p-1 transition-colors"
-                  >
-                    <EllipsisVertical />
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => setIsDrawerOpen((prev) => !prev)}
-                    className="text-white p-2 hover:bg-white/10 rounded-full transition-colors"
-                  >
-                    <EllipsisVertical />
-                  </button>
-                )}
-              </>
-            )}
+                <span className="text-white text-xs font-medium mt-1">
+                  {Likes?.data?.totalLikes || "7.4K"}
+                </span>
+              </motion.div>
+
+              {/* Comments button */}
+              <motion.div
+                className="flex flex-col items-center"
+                whileTap={{ scale: 0.9 }}
+              >
+                <button
+                  className="w-12 h-12 rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors"
+                  onClick={() => {
+                    setSelectedVideoId(currentVideo?.id);
+                    setIsOpen(true);
+                  }}
+                >
+                  <MessageCircle className="w-6 h-6 text-white" />
+                </button>
+                <span className="text-white text-xs font-medium mt-1">
+                  {Comments?.data?.length || "97"}
+                </span>
+              </motion.div>
+
+              {/* Share button */}
+              <motion.div
+                className="flex flex-col items-center"
+                whileTap={{ scale: 0.9 }}
+              >
+                <button className="w-12 h-12 rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors">
+                  <Share className="w-6 h-6 text-white" />
+                </button>
+                <span className="text-white text-xs font-medium mt-1">
+                  Share
+                </span>
+              </motion.div>
+
+              {/* Remix button */}
+              <motion.div
+                className="flex flex-col items-center"
+                whileTap={{ scale: 0.9 }}
+              >
+                <button className="w-12 h-12 rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors">
+                  <Zap className="w-6 h-6 text-white" />
+                </button>
+                <span className="text-white text-xs font-medium mt-1">
+                  Remix
+                </span>
+              </motion.div>
+
+              {/* Creator avatar */}
+              <div className="mt-4">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">
+                    {currentVideo?.userName?.[0] || "A"}
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        /* Mobile Layout */
+        <div
+          className="h-full relative"
+          onClick={() => setShowControls(!showControls)}
+        >
+          {/* Mobile top bar */}
 
-      {/* Video Feed - Cloud-themed */}
-      <div
-        ref={containerRef}
-        className="overflow-y-scroll snap-y snap-mandatory"
-        onScroll={handleScroll}
-        style={{
-          scrollbarWidth: "none",
-          msOverflowStyle: "none",
-          height: "calc(var(--vh, 1vh) * 100)",
-          paddingBottom: "env(safe-area-inset-bottom)",
-        }}
-      >
-        {AllVideos.data?.length > 0 &&
-          AllVideos.data?.map((video, index) => (
-            <div
-              key={video.id}
-              className="w-full snap-start relative bg-black"
-              style={{
-                height: "calc(var(--vh, 1vh) * 100)",
-              }}
-            >
-              {/* Video container with cloud-themed elements */}
-              <div className="absolute inset-0">
+          <div className="absolute top-0 left-0 right-0 z-30 bg-gradient-to-b from-black/80 to-transparent pt-safe">
+            <div className="flex items-center justify-between p-4 pt-8">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                  <div className="text-white font-bold text-xs">CC</div>
+                </div>
+                <span className="text-white font-medium">Shorts</span>
+              </div>
+              <div className="flex items-center space-x-4">
+                <Search
+                  onClick={() => router.push("/search")}
+                  className="w-6 h-6 text-white"
+                />
+                <MoreHorizontal
+                  onClick={() => setIsDrawerOpen((prev) => !prev)}
+                  className="w-6 h-6 text-white"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Video feed */}
+          <div
+            ref={containerRef}
+            className="h-full overflow-y-scroll snap-y snap-mandatory"
+            onScroll={handleScroll}
+            style={{
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+            }}
+          >
+            {AllVideos.data?.map((video, index) => (
+              <div
+                key={video.id}
+                className="w-full h-full snap-start relative bg-black flex items-center justify-center"
+              >
                 {videosToLoad.has(index) ? (
                   <video
                     ref={(el) => (videoRefs.current[index] = el)}
@@ -212,265 +376,165 @@ export const VideoPlayer = ({
                     loop
                     playsInline
                     preload="metadata"
-                    webkit-playsinline="true"
                     onLoadedData={() => handleVideoLoaded(index)}
-                    onLoadStart={() =>
-                      setVideoStates((prev) => ({
-                        ...prev,
-                        [index]: "loading",
-                      }))
-                    }
-                    onCanPlay={() =>
-                      setVideoStates((prev) => ({ ...prev, [index]: "ready" }))
-                    }
                     onPlay={() => handleVideoPlay(index)}
                     onPause={() => handleVideoPause(index)}
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      width: "100%",
-                      height: "100%",
-                      objectFit: isMobile ? "cover" : "contain",
-                      backgroundColor: "#000",
-                    }}
                   />
                 ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
+                  <div className="w-full h-full bg-gray-900 flex items-center justify-center">
                     <div className="text-white/60 text-center">
-                      <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mb-3 mx-auto">
-                        <Cloud className="w-8 h-8 text-white/40" />
-                      </div>
-                      <div className="text-sm font-medium">{video.title}</div>
-                      <div className="text-xs mt-1">Scroll to stream</div>
+                      <div className="text-sm">{video.title}</div>
+                      <div className="text-xs mt-1">Loading...</div>
                     </div>
                   </div>
                 )}
 
-                {/* Cloud-themed gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 pointer-events-none z-5" />
-              </div>
+                {/* Play/Pause overlay */}
 
-              {/* Loading State */}
-              {videosToLoad.has(index) && !loadedVideos.has(index) && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gray-900 z-10">
-                  <div className="flex flex-col items-center space-y-4">
-                    <div className="relative w-16 h-16">
-                      <Cloud className="w-full h-full text-blue-400 animate-pulse" />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-                      </div>
-                    </div>
-                    <span className="text-white text-sm">
-                      Streaming {video.title}...
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              {/* Play/Pause Overlay */}
-              {videosToLoad.has(index) && (
                 <div
-                  className="absolute inset-0 flex items-center justify-center z-10"
-                  onClick={togglePlayPause}
+                  className={`absolute inset-0 flex items-center justify-center ${
+                    isPlaying ? "opacity-0" : "opacity-100"
+                  }`}
                 >
-                  {!isPlaying &&
-                    index === currentVideoIndex &&
-                    loadedVideos.has(index) && (
-                      <div className="bg-black/60 rounded-full p-6 animate-pulse">
-                        <Play className="w-16 h-16 text-white fill-white" />
-                      </div>
-                    )}
+                  <button
+                    onClick={togglePlayPause}
+                    className="bg-black/60 rounded-full p-6"
+                  >
+                    <Play className="w-12 h-12 text-white fill-white" />
+                  </button>
                 </div>
-              )}
 
-              {/* Right Side Actions - Cloud-themed */}
-              <div
-                className="absolute right-4 flex flex-col items-center space-y-6 z-20"
-                style={{ bottom: `calc(2rem + env(safe-area-inset-bottom))` }}
-              >
-                {/* Clip Action Button */}
-                <motion.div
-                  className="flex flex-col items-center"
-                  whileTap={{ scale: 0.9 }} // Press down animation
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                >
-                  <button
-                    className="w-12 h-12 text-white hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
-                    onClick={() => LikeVideo.mutate()}
+                {/* Right side actions - Mobile */}
+                <div className="absolute right-3 bottom-24 flex flex-col items-center space-y-6">
+                  {/* Like button */}
+                  <motion.div
+                    className="flex flex-col items-center"
+                    whileTap={{ scale: 0.9 }}
                   >
-                    <motion.div
-                      animate={{
-                        scale:
-                          !Likes.isPending && Likes?.data?.isLiked
-                            ? [1, 1.2, 1]
-                            : 1,
-                        rotate:
-                          !Likes.isPending && Likes?.data?.isLiked
-                            ? [0, -10, 10, 0]
-                            : 0,
+                    <button
+                      className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                        isVideoLiked(Likes, LikeVideo)
+                          ? "bg-blue-500 text-white-"
+                          : "bg-black/40"
+                      }`}
+                      onClick={() => LikeVideo.mutate()}
+                    >
+                      <ThumbsUp className={`w-7 h-7 `} />
+                    </button>
+                    <span className="text-white text-xs font-medium mt-1">
+                      {Likes?.data?.totalLikes || "1.9M"}
+                    </span>
+                  </motion.div>
+
+                  {/* Comments button */}
+                  <motion.div
+                    className="flex flex-col items-center"
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <button
+                      className="w-12 h-12 rounded-full flex items-center justify-center bg-black/40"
+                      onClick={() => {
+                        setSelectedVideoId(video.id);
+                        setIsOpen(true);
                       }}
-                      transition={{ duration: 0.6 }}
                     >
-                      <Cloud
-                        className={`w-7 h-7 transition-all ${
-                          !Likes.isPending && Likes?.data?.isLiked
-                            ? "fill-blue-400 text-blue-400"
-                            : "text-white hover:text-blue-300"
-                        }`}
-                      />
-                    </motion.div>
-                  </button>
-                  <motion.span
-                    className="text-white text-xs font-medium mt-1"
-                    animate={{
-                      y:
-                        !Likes.isPending && Likes.data?.totalLikesChanged
-                          ? [0, -3, 0]
-                          : 0,
-                    }}
-                    transition={{ duration: 0.4 }}
-                  >
-                    {!Likes.isPending && Likes?.data?.totalLikes} Clips
-                  </motion.span>
-                </motion.div>
+                      <MessageCircle className="w-7 h-7 text-white" />
+                    </button>
+                    <span className="text-white text-xs font-medium mt-1">
+                      {Comments?.data?.length || "1,941"}
+                    </span>
+                  </motion.div>
 
-                {/* Comments Button */}
-                <motion.div
-                  className="flex flex-col items-center"
-                  whileTap={{ scale: 0.9 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                >
-                  <button
-                    className="w-12 h-12 text-white hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
-                    onClick={() => {
-                      setSelectedVideoId(video.id);
-                      setIsOpen((prev) => !prev);
-                    }}
+                  {/* Share button */}
+                  <motion.div
+                    className="flex flex-col items-center"
+                    whileTap={{ scale: 0.9 }}
                   >
-                    <motion.div
-                      whileTap={{ scale: 0.8 }}
-                      animate={isOpen ? { rotate: 360 } : {}}
-                      transition={{ duration: 0.6 }}
-                    >
-                      <MessageCircle className="w-7 h-7" />
-                    </motion.div>
-                  </button>
-                  <motion.span
-                    className="text-white text-xs font-medium mt-1"
-                    animate={{
-                      scale: Comments?.data?.lengthChanged ? [1, 1.1, 1] : 1,
-                    }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {Comments && Comments.data?.length}
-                  </motion.span>
-                </motion.div>
+                    <button className="w-12 h-12 rounded-full flex items-center justify-center bg-black/40">
+                      <Share className="w-7 h-7 text-white" />
+                    </button>
+                    <span className="text-white text-xs font-medium mt-1">
+                      Share
+                    </span>
+                  </motion.div>
 
-                {/* Volume Control Button */}
-                <motion.div
-                  whileTap={{ scale: 0.9 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                >
-                  <button
-                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
-                      isMuted
-                        ? "text-white/60 hover:bg-white/10"
-                        : "text-white hover:bg-white/20"
-                    }`}
-                    onClick={toggleMute}
+                  {/* Remix button */}
+                  <motion.div
+                    className="flex flex-col items-center"
+                    whileTap={{ scale: 0.9 }}
                   >
-                    <motion.div
-                      key={isMuted ? "muted" : "unmuted"}
-                      initial={{ scale: 0.8, opacity: 0.6 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{ type: "spring", stiffness: 500 }}
+                    <button className="w-12 h-12 rounded-full flex items-center justify-center bg-black/40">
+                      <Zap className="w-7 h-7 text-white" />
+                    </button>
+                    <span className="text-white text-xs font-medium mt-1">
+                      Remix
+                    </span>
+                  </motion.div>
+
+                  {/* Volume button */}
+                  <motion.div whileTap={{ scale: 0.9 }}>
+                    <button
+                      className="w-10 h-10 rounded-full flex items-center justify-center bg-black/40"
+                      onClick={toggleMute}
                     >
                       {isMuted ? (
-                        <VolumeOff className="w-7 h-7" />
+                        <VolumeOff className="w-6 h-6 text-white" />
                       ) : (
-                        <Volume2 className="w-7 h-7" />
+                        <Volume2 className="w-6 h-6 text-white" />
                       )}
-                    </motion.div>
-                  </button>
-                </motion.div>
-              </div>
+                    </button>
+                  </motion.div>
 
-              {/* Bottom Content */}
-              <div
-                className="absolute left-0 right-20 p-4 z-15"
-                style={{
-                  bottom: `calc(1rem + env(safe-area-inset-bottom))`,
-                }}
-              >
-                <div className="flex items-center space-x-3 mb-3">
-                  <div className="w-10 h-10   rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center text-white font-bold text-lg shadow-lg">
-                    {video.userName[0]}
+                  {/* Creator avatar */}
+                  <div className="mt-2">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center border-2 border-white">
+                      <span className="text-white font-bold text-sm">
+                        {video?.userName?.[0] || "T"}
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-white font-semibold text-lg">
-                    {video.userName}
-                  </span>
                 </div>
 
-                <p className="text-white text-sm mb-3 max-w-md leading-relaxed">
-                  {video.description}
-                </p>
-
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {video.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="bg-blue-500/80 text-white px-2 py-1 rounded-full text-xs font-medium hover:bg-white/30 cursor-pointer transition-colors"
-                    >
-                      #{tag}
+                {/* Bottom content - Mobile */}
+                <div className="absolute bottom-0 left-0 right-20 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                  <div className="flex items-center space-x-3 mb-2">
+                    <span className="text-white font-medium">
+                      @{video?.userName || "Tigerspit"}
                     </span>
-                  ))}
-                </div>
-
-                {/* Progress Bar */}
-                {videoProgress[index] && videoDurations[index] && (
-                  <div className="mb-2">
-                    <div className="flex items-center justify-between text-white text-xs mb-1">
-                      <span>
-                        {Math.floor(
-                          (videoProgress[index].playedSeconds || 0) / 60
-                        )}
-                        :
-                        {String(
-                          Math.floor(
-                            (videoProgress[index].playedSeconds || 0) % 60
-                          )
-                        ).padStart(2, "0")}
-                      </span>
-                      <span>
-                        {Math.floor(videoDurations[index] / 60)}:
-                        {String(
-                          Math.floor(videoDurations[index] % 60)
-                        ).padStart(2, "0")}
-                      </span>
-                    </div>
-                    <div
-                      className="w-full bg-white/20 rounded-full h-1 cursor-pointer"
-                      onClick={(e) => {
-                        const rect = e.currentTarget.getBoundingClientRect();
-                        const percent = (e.clientX - rect.left) / rect.width;
-                        const seekTime = percent * videoDurations[index];
-                        seekTo(index, seekTime);
-                      }}
-                    >
-                      <div
-                        className="bg-white rounded-full h-1 transition-all duration-300"
-                        style={{
-                          width: `${(videoProgress[index].played || 0) * 100}%`,
-                        }}
-                      />
-                    </div>
+                    <button className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                      Subscribe
+                    </button>
                   </div>
-                )}
+
+                  <p className="text-white text-sm mb-2 leading-relaxed">
+                    {video?.description || "Don't worry, we got you 😉"}
+                  </p>
+
+                  <div className="flex items-center space-x-2 text-white text-sm">
+                    <span>♫ Free Bird - Lynyrd Skynyrd</span>
+                  </div>
+
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {video?.tags?.map((tag) => (
+                      <span key={tag} className="text-white text-sm">
+                        #{tag}
+                      </span>
+                    )) || (
+                      <>
+                        <span className="text-white text-sm">
+                          #mdtattoostudio
+                        </span>
+                        <span className="text-white text-sm">#tattooshop</span>
+                        <span className="text-white text-sm">#tattoohumor</span>
+                      </>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
-      </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <CommentSection
         isOpen={isOpen}
