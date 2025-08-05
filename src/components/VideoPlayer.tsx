@@ -513,10 +513,6 @@ export const VideoPlayer = ({
                     {video?.description || "Don't worry, we got you 😉"}
                   </p>
 
-                  <div className="flex items-center space-x-2 text-white text-sm">
-                    <span>♫ Free Bird - Lynyrd Skynyrd</span>
-                  </div>
-
                   <div className="flex flex-wrap gap-1 mt-2">
                     {video?.tags?.map((tag) => (
                       <span key={tag} className="text-white text-sm">
