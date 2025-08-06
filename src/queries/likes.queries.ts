@@ -24,13 +24,11 @@ export const useLikeVideo = (data) => {
     },
     onSuccess: (response) => {
       //   toast.success("Liked❤💕");
-      console.log(response.data);
       return response.data;
     },
     onError: (error, _vars, context) => {
       queryClient.setQueryData(["get-likes", data], context?.previousData);
       toast.error("That did'nt work🤔");
-      console.log(error);
     },
     onSettled: () => {
       queryClient.invalidateQueries(["get-likes", data]);

@@ -45,7 +45,6 @@ export const useCreateComments = (videoId: string, username: string | null) => {
 
     onError: (error, _newComment, context) => {
       toast.error("Error Sending Comment, Please try again.");
-      console.log(error);
 
       // Rollback if it fails
       if (context) {
@@ -54,8 +53,6 @@ export const useCreateComments = (videoId: string, username: string | null) => {
     },
 
     onSuccess: () => {
-      toast.success("Comment Sent 😉");
-
       // Optionally refetch to get fresh data
       queryClient.invalidateQueries(["get-comments", videoId]);
     },
@@ -67,7 +64,6 @@ export const useGetComments = (id, options) => {
     queryKey: ["get-comments", id],
     queryFn: async () => {
       const response = await getComments({ id });
-      // console.log(response)
       return response;
     },
     ...options,
@@ -79,12 +75,10 @@ export const useDeleteComment = () => {
     mutationFn: ({ id }: { id: string }) => deleteComment({ id }),
     onSuccess: (response) => {
       toast.success("Comment Deleted😒");
-      console.log(response.data);
       return response.data;
     },
     onError: (error) => {
       toast.error("Error Deleting Comment, Please try again.");
-      console.log(error);
     },
   });
 };

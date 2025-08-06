@@ -4,16 +4,7 @@ import { Heart, MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 
 // Comment Component
-export const Comment = ({ comment, onLike, onReply }) => {
-  // const [isLiked, setIsLiked] = useState(comment.isLiked);
-  // const [likes, setLikes] = useState(comment.likes);
-
-  // const handleLike = () => {
-  //   setIsLiked(!isLiked);
-  //   setLikes((prev) => (isLiked ? prev - 1 : prev + 1));
-  //   onLike(comment.id, !isLiked);
-  // };
-
+export const Comment = ({ comment, onLike }) => {
   const timeAgo = (timestamp) => {
     const now = new Date();
     const commentTime = new Date(timestamp);
@@ -26,47 +17,22 @@ export const Comment = ({ comment, onLike, onReply }) => {
 
   return (
     <div className="flex space-x-3 py-4">
-      <div className="w-8 h-8 border-2 border-white rounded-full bg-gradient-to-br from-primary to-chart-2 flex items-center justify-center text-white font-bold text-md">
+      <div className="w-8 h-8 border-2 border-gray rounded-full bg-gradient-to-br from-primary to-chart-2 flex items-center justify-center text-white font-bold text-md">
         {comment.userName[0]}
       </div>
-      {/* <img
-        src={comment.id}
-        alt={comment.userName}
-        className="w-8 h-8 rounded-full object-cover"
-      /> */}
+
       <div className="flex-1 min-w-0">
         <div className="flex items-center space-x-2 mb-1">
-          <span className="font-medium text-sm text-gray-900">
+          <span className="font-medium text-sm text-foreground">
             {comment.userName}
           </span>
           <span className="text-xs text-gray-500">
             {timeAgo(comment.createdAt)}
           </span>
         </div>
-        <p className="text-sm text-gray-800 mb-2">{comment.content}</p>
-        {/* <div className="flex items-center space-x-4 text-xs text-gray-500">
-          <button
-            onClick={onReply}
-            className="hover:text-gray-700 transition-colors"
-          >
-            Reply
-          </button>
-          {likes > 0 && (
-            <span>
-              {likes} {likes === 1 ? "like" : "likes"}
-            </span>
-          )}
-        </div> */}
+        <p className="text-sm text-foreground mb-2">{comment.content}</p>
       </div>
       <div className="flex flex-col items-center space-y-1">
-        {/* <button
-          onClick={handleLike}
-          className={`p-1.5 rounded-full transition-colors ${
-            isLiked ? "text-red-500" : "text-gray-400 hover:text-red-400"
-          }`}
-        >
-          <Heart className={`w-4 h-4 ${isLiked ? "fill-current" : ""}`} />
-        </button> */}
         <button className="p-1.5 text-gray-400 hover:text-gray-600 transition-colors">
           <MoreHorizontal className="w-4 h-4" />
         </button>

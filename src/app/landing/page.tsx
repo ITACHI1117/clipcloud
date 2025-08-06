@@ -194,7 +194,6 @@ export default function CloudClipLanding() {
                   className="cursor-pointer w-full bg-gradient-to-r from-primary to-chart-2 text-white"
                 >
                   Get Started
-                  <Sparkles className="w-4 h-4 ml-2" />
                 </Button>
               </div>
             </div>
@@ -239,7 +238,7 @@ export default function CloudClipLanding() {
               {/* New description */}
               <p className="text-xl text-slate-300 leading-relaxed max-w-2xl">
                 Transform your raw footage into scroll-stopping content with our
-                AI-powered editing suite. Join{" "}
+                editing suite. Join{" "}
                 <span className="text-blue-400 font-semibold">
                   2.4M creators
                 </span>{" "}

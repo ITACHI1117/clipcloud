@@ -5,7 +5,6 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: async (data) => login(data),
     onSuccess: (response) => {
-      console.log("Login successful", response);
       return response.data;
     },
     onError: (error) => {
@@ -19,9 +18,7 @@ export const useLogin = () => {
 export const useSignUp = () => {
   return useMutation({
     mutationFn: async (data) => signUp(data),
-    onSuccess: (response) => {
-      console.log("Sign up successful", response);
-    },
+    onSuccess: (response) => {},
     onError: (error) => {
       throw error;
     },

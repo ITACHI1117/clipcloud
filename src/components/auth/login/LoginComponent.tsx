@@ -125,9 +125,7 @@ export default function LoginComponent() {
           <h1 className="text-3xl font-bold text-foreground mb-2">
             Welcome back
           </h1>
-          <p className="text-muted-foreground">
-            Sign in to continue to StreamNest
-          </p>
+          <p className="text-muted-foreground">Sign in to continue</p>
         </div>
 
         {/* Login Card */}
@@ -237,36 +235,6 @@ export default function LoginComponent() {
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-border/50"></div>
               </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">
-                  Or continue with
-                </span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <Button variant="outline" className="h-10">
-                <svg
-                  role="img"
-                  viewBox="0 0 24 24"
-                  className="w-4 h-4 mr-2"
-                  fill="currentColor"
-                >
-                  <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm6.927 8.2c.2.4.3.9.3 1.5 0 1.1-.4 2.1-1.1 2.8-.8.8-1.8 1.2-3 1.2h-1.9v1.9h1.9c1.5 0 2.9-.6 3.9-1.6 1-1 1.6-2.4 1.6-3.9 0-.6-.1-1.2-.3-1.7l-2.1.8zM12 15.6V8.4h6.6c.1.3.1.6.1.9 0 2.4-1.7 4.3-4 4.3h-2.7v2.7c0 .4-.3.7-.7.7-.4 0-.7-.3-.7-.7v-2.7H8.4v2.7c0 .4-.3.7-.7.7-.4 0-.7-.3-.7-.7v-2.7H5.7v2.7c0 .4-.3.7-.7.7-.4 0-.7-.3-.7-.7V8.4h7.2v7.2h.5z" />
-                </svg>
-                Google
-              </Button>
-              <Button variant="outline" className="h-10">
-                <svg
-                  role="img"
-                  viewBox="0 0 24 24"
-                  className="w-4 h-4 mr-2"
-                  fill="currentColor"
-                >
-                  <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm-1.5 18.5v-5.5H7v-3h3.5V7.5h3v3.5H17v3h-3.5v5.5h-3z" />
-                </svg>
-                Microsoft
-              </Button>
             </div>
           </CardContent>
         </Card>

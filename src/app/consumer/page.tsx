@@ -11,17 +11,15 @@ export default function HTML5VideoFeed() {
 
   useEffect(() => {
     if (AllVideos.isSuccess) {
-      console.log(AllVideos);
-      console.log(AllVideos.data?.length);
     }
   }, [AllVideos.isSuccess]);
 
   useEffect(() => {
-    AllVideos.isError && console.log(AllVideos.error);
+    AllVideos.isError && toast.error("Error fetching videos");
   }, [AllVideos.isError]);
 
   useEffect(() => {
-    AllVideos.isPending && console.log("loading");
+    // AllVideos.isPending && console.log("loading");
   }, [AllVideos.isPending]);
 
   useEffect(() => {

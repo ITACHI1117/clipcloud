@@ -13,22 +13,19 @@ export const useGetAllVideos = () => {
     queryKey: ["get-all-videos"],
     queryFn: async () => {
       const response = await getAllVideos();
-      // console.log(response.data);
       return response;
     },
   });
 };
 
 // create anew video post
-export const useCreateVideoPosts = () => {
+export const useCreateVideoPosts = (onProgress) => {
   return useMutation({
-    mutationFn: (data) => createVideoPost(data),
+    mutationFn: (data) => createVideoPost(data, onProgress),
     onSuccess: (response) => {
-      console.log(response);
       return response;
     },
     onError: (error) => {
-      console.log(error);
       throw error;
     },
   });
@@ -47,11 +44,9 @@ export const useDeleteVideoByID = () => {
   return useMutation({
     mutationFn: (id) => deleteVideoByID(id),
     onSuccess: (response) => {
-      console.log(response);
       return response;
     },
     onError: (error) => {
-      console.log(error);
       throw error;
     },
   });
@@ -63,7 +58,6 @@ export const useGetMyVideos = () => {
     queryKey: ["get-video-by-id"],
     queryFn: async () => {
       const response = await getMyVideos();
-      // console.log(response.data);
       return response.data;
     },
   });

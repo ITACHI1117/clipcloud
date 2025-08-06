@@ -7,7 +7,6 @@ export const useAllVideos = () => {
 
   useEffect(() => {
     if (AllVideos.isError) {
-      console.log(AllVideos.error);
       toast.error("Error Loading videos😢", {
         description:
           "Please check your network and try again. Close this Message to try again",
@@ -16,14 +15,6 @@ export const useAllVideos = () => {
       });
     }
   }, [AllVideos.isError]);
-
-  useEffect(() => {
-    AllVideos.isPending && console.log("loading");
-  }, [AllVideos.isPending]);
-
-  useEffect(() => {
-    console.log("render");
-  }, [AllVideos]);
 
   return { AllVideos };
 };

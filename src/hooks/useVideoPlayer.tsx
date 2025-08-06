@@ -72,9 +72,7 @@ export const useVideoPlayer = ({
       // Play current video
       await video.play();
       setVideoStates((prev) => ({ ...prev, [index]: "playing" }));
-      console.log(`✅ Video ${index} playing`);
     } catch (error) {
-      console.log(`⚠️ Video ${index} play failed:`, error.message);
       // Try again after a short delay
       setTimeout(() => {
         if (video && !video.paused) return;
@@ -89,7 +87,6 @@ export const useVideoPlayer = ({
     if (video && !video.paused) {
       video.pause();
       setVideoStates((prev) => ({ ...prev, [index]: "paused" }));
-      console.log(`⏸️ Video ${index} paused`);
     }
   };
 
@@ -116,7 +113,6 @@ export const useVideoPlayer = ({
     }
 
     setVideosToLoad(toLoad);
-    console.log(`📱 Preloading videos: ${Array.from(toLoad).join(", ")}`);
   };
 
   const handleScroll = (e) => {
@@ -158,13 +154,11 @@ export const useVideoPlayer = ({
 
   // Event handlers
   const handleVideoLoaded = (index) => {
-    console.log(`📹 Video ${index} loaded`);
     setLoadedVideos((prev) => new Set([...prev, index]));
     setVideoStates((prev) => ({ ...prev, [index]: "loaded" }));
   };
 
   const handleVideoPlay = (index) => {
-    console.log(`▶️ Video ${index} started playing`);
     setVideoStates((prev) => ({ ...prev, [index]: "playing" }));
     if (index === currentVideoIndex) {
       setIsPlaying(true);
@@ -172,7 +166,6 @@ export const useVideoPlayer = ({
   };
 
   const handleVideoPause = (index) => {
-    console.log(`⏸️ Video ${index} paused`);
     setVideoStates((prev) => ({ ...prev, [index]: "paused" }));
     if (index === currentVideoIndex) {
       setIsPlaying(false);
@@ -180,7 +173,6 @@ export const useVideoPlayer = ({
   };
 
   const handleVideoEnded = (index) => {
-    console.log(`🏁 Video ${index} ended`);
     setVideoStates((prev) => ({ ...prev, [index]: "ended" }));
     if (index === currentVideoIndex) {
       if (index < AllVideos.data?.length - 1) {
@@ -205,11 +197,9 @@ export const useVideoPlayer = ({
   const handleVideoDuration = (index, e) => {
     const duration = e.target.duration;
     setVideoDurations((prev) => ({ ...prev, [index]: duration }));
-    console.log(`⏱️ Video ${index} duration: ${duration}s`);
   };
 
   const handleVideoError = (index, error) => {
-    console.error(`❌ Video ${index} error:`, error);
     setVideoStates((prev) => ({ ...prev, [index]: "error" }));
     setLoadedVideos((prev) => new Set([...prev, index])); // Remove loading state
   };

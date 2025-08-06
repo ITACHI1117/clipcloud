@@ -116,7 +116,7 @@ export const VideoPlayer = ({
   const currentVideo = AllVideos.data?.[currentVideoIndex];
 
   return (
-    <div className="h-screen bg-black relative overflow-hidden">
+    <div className="pb-safe h-screen bg-black relative overflow-hidden pb-[env(safe-area-inset-bottom)]">
       {/* Desktop/Tablet Layout */}
       {!isMobile ? (
         <div className="flex h-full">
@@ -125,19 +125,33 @@ export const VideoPlayer = ({
             <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
               <div className="text-white font-bold text-sm">CC</div>
             </div>
-            <Menu
-              onClick={() => setIsDrawerOpen((prev) => !prev)}
-              className="w-6 h-6 text-white cursor-pointer hover:text-gray-300"
-            />
-            {/* <div className="w-6 h-6 bg-gray-700 rounded-full"></div> */}
-            <Search
-              onClick={() => router.push("/search")}
-              className="w-6 h-6 text-white cursor-pointer hover:text-gray-300"
-            />
-            <Plus
-              onClick={() => router.push("/creator/upload")}
-              className="w-6 h-6 text-white cursor-pointer hover:text-gray-300"
-            />
+            {view != "video" ? (
+              <>
+                <Menu
+                  onClick={() => setIsDrawerOpen((prev) => !prev)}
+                  className="w-6 h-6 text-white cursor-pointer hover:text-gray-300"
+                />
+                <Search
+                  onClick={() => router.push("/search")}
+                  className="w-6 h-6 text-white cursor-pointer hover:text-gray-300"
+                />
+                {user && user.role == "Creator" && (
+                  <Plus
+                    onClick={() => router.push("/creator/upload")}
+                    className="w-6 h-6 text-white cursor-pointer hover:text-gray-300"
+                  />
+                )}
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => setView && setView("dashboard")}
+                  className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                >
+                  <ArrowLeft className="w-8 h-8 cursor-pointer text-white" />
+                </button>
+              </>
+            )}
           </div>
           {/* Main video area */}
           <div className="flex-1 flex">
@@ -170,14 +184,17 @@ export const VideoPlayer = ({
                         />
 
                         {/* Video Controls Overlay */}
-                        <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                        <div className="absolute inset-0 flex items-center justify-center opacity-100 hover:opacity-100 transition-opacity">
                           <div className="absolute top-4 left-4 right-4 flex justify-between items-center">
                             <div className="text-white text-sm bg-black/50 px-2 py-1 rounded">
                               {video.title}
                             </div>
                             <div className="flex space-x-2">
                               <button className="p-2 bg-black/50 rounded-full text-white hover:bg-black/70">
-                                <Pause className="w-4 h-4" />
+                                <Pause
+                                  onClick={togglePlayPause}
+                                  className="w-4 h-4"
+                                />
                               </button>
                               <button
                                 className="p-2 bg-black/50 rounded-full text-white hover:bg-black/70"
@@ -189,12 +206,9 @@ export const VideoPlayer = ({
                                   <Volume2 className="w-4 h-4" />
                                 )}
                               </button>
-                              <button className="p-2 bg-black/50 rounded-full text-white hover:bg-black/70">
+                              {/* <button className="p-2 bg-black/50 rounded-full text-white hover:bg-black/70">
                                 <Maximize className="w-4 h-4" />
-                              </button>
-                              <button className="p-2 bg-black/50 rounded-full text-white hover:bg-black/70">
-                                <MoreHorizontal className="w-4 h-4" />
-                              </button>
+                              </button> */}
                             </div>
                           </div>
 
@@ -207,12 +221,22 @@ export const VideoPlayer = ({
                             </button>
                           )}
                         </div>
+                        <div className="absolute bottom-4 left-2 right-2">
+                          <p>
+                            <p className="text-white">{video.description}</p>
+                          </p>
+                          {video?.tags?.map((tag) => (
+                            <span key={tag} className="text-white text-sm">
+                              #{tag}
+                            </span>
+                          )) || <></>}
+                        </div>
 
                         {/* Progress bar at bottom of video */}
-                        {videoProgress[index] && videoDurations[index] && (
+                        {videoDurations[index] && (
                           <div className="absolute bottom-2 left-2 right-2">
                             <div
-                              className="w-full bg-white/30 rounded-full h-1 cursor-pointer"
+                              className="w-full bg-white/30 rounded-full h-3 cursor-pointer"
                               onClick={(e) => {
                                 const rect =
                                   e.currentTarget.getBoundingClientRect();
@@ -236,10 +260,10 @@ export const VideoPlayer = ({
                         )}
                       </div>
                     ) : (
-                      <div className="w-full max-w-md h-96 bg-gray-900 rounded-lg flex items-center justify-center">
-                        <div className="text-white/60 text-center">
-                          <div className="text-sm">{video.title}</div>
-                          <div className="text-xs mt-1">Loading...</div>
+                      <div className="w-full max-w-md h-96 bg-background rounded-lg flex items-center justify-center">
+                        <div className="text-foreground text-center">
+                          {/* <div className="text-sm">{video.title}</div> */}
+                          <div className="text-xs mt-1">Loading Video</div>
                         </div>
                       </div>
                     )}
@@ -256,7 +280,7 @@ export const VideoPlayer = ({
                 whileTap={{ scale: 0.9 }}
               >
                 <button
-                  className={`w-12 h-12 rounded-full flex items-center justify-center hover:bg-gray-800 ${
+                  className={`w-12 h-12 rounded-full flex items-center cursor-pointer justify-center hover:bg-gray-800 ${
                     isVideoLiked(Likes, LikeVideo)
                       ? "bg-blue-500 text-white-"
                       : "text-white"
@@ -266,7 +290,7 @@ export const VideoPlayer = ({
                   <ThumbsUp className={`w-6 h-6 `} />
                 </button>
                 <span className="text-white text-xs font-medium mt-1">
-                  {Likes?.data?.totalLikes || "7.4K"}
+                  {Likes?.data?.totalLikes || "0"}
                 </span>
               </motion.div>
 
@@ -276,7 +300,7 @@ export const VideoPlayer = ({
                 whileTap={{ scale: 0.9 }}
               >
                 <button
-                  className="w-12 h-12 rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors"
+                  className="w-12 h-12 rounded-full flex items-center cursor-pointer justify-center hover:bg-gray-800 transition-colors"
                   onClick={() => {
                     setSelectedVideoId(currentVideo?.id);
                     setIsOpen(true);
@@ -285,7 +309,7 @@ export const VideoPlayer = ({
                   <MessageCircle className="w-6 h-6 text-white" />
                 </button>
                 <span className="text-white text-xs font-medium mt-1">
-                  {Comments?.data?.length || "97"}
+                  {Comments?.data?.length || "0"}
                 </span>
               </motion.div>
 
@@ -294,32 +318,21 @@ export const VideoPlayer = ({
                 className="flex flex-col items-center"
                 whileTap={{ scale: 0.9 }}
               >
-                <button className="w-12 h-12 rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors">
+                <button
+                  onClick={() => toast.info("Video share feature coming soon")}
+                  className="w-12 h-12 rounded-full flex  items-center justify-center hover:bg-gray-800 transition-colors"
+                >
                   <Share className="w-6 h-6 text-white" />
                 </button>
                 <span className="text-white text-xs font-medium mt-1">
                   Share
                 </span>
               </motion.div>
-
-              {/* Remix button */}
-              <motion.div
-                className="flex flex-col items-center"
-                whileTap={{ scale: 0.9 }}
-              >
-                <button className="w-12 h-12 rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors">
-                  <Zap className="w-6 h-6 text-white" />
-                </button>
-                <span className="text-white text-xs font-medium mt-1">
-                  Remix
-                </span>
-              </motion.div>
-
               {/* Creator avatar */}
               <div className="mt-4">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
                   <span className="text-white font-bold text-sm">
-                    {currentVideo?.userName?.[0] || "A"}
+                    {currentVideo?.userName?.[0] || "X"}
                   </span>
                 </div>
               </div>
@@ -337,21 +350,33 @@ export const VideoPlayer = ({
           <div className="absolute top-0 left-0 right-0 z-30 bg-gradient-to-b from-black/80 to-transparent pt-safe">
             <div className="flex items-center justify-between p-4 pt-8">
               <div className="flex items-center space-x-2">
+                {view == "video" && (
+                  <>
+                    <button
+                      onClick={() => setView && setView("dashboard")}
+                      className=" hover:bg-white/10 rounded-full transition-colors"
+                    >
+                      <ArrowLeft className="w-8 h-8 cursor-pointer text-white" />
+                    </button>
+                  </>
+                )}
                 <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
                   <div className="text-white font-bold text-xs">CC</div>
                 </div>
                 <span className="text-white font-medium">Shorts</span>
               </div>
-              <div className="flex items-center space-x-4">
-                <Search
-                  onClick={() => router.push("/search")}
-                  className="w-6 h-6 text-white"
-                />
-                <MoreHorizontal
-                  onClick={() => setIsDrawerOpen((prev) => !prev)}
-                  className="w-6 h-6 text-white"
-                />
-              </div>
+              {view != "video" && (
+                <div className="flex items-center space-x-4">
+                  <Search
+                    onClick={() => router.push("/search")}
+                    className="w-6 h-6 text-white"
+                  />
+                  <MoreHorizontal
+                    onClick={() => setIsDrawerOpen((prev) => !prev)}
+                    className="w-6 h-6 text-white"
+                  />
+                </div>
+              )}
             </div>
           </div>
 
@@ -425,7 +450,7 @@ export const VideoPlayer = ({
                       <ThumbsUp className={`w-7 h-7 `} />
                     </button>
                     <span className="text-white text-xs font-medium mt-1">
-                      {Likes?.data?.totalLikes || "1.9M"}
+                      {Likes?.data?.totalLikes || "0"}
                     </span>
                   </motion.div>
 
@@ -444,7 +469,7 @@ export const VideoPlayer = ({
                       <MessageCircle className="w-7 h-7 text-white" />
                     </button>
                     <span className="text-white text-xs font-medium mt-1">
-                      {Comments?.data?.length || "1,941"}
+                      {Comments?.data?.length || "0"}
                     </span>
                   </motion.div>
 
@@ -453,24 +478,16 @@ export const VideoPlayer = ({
                     className="flex flex-col items-center"
                     whileTap={{ scale: 0.9 }}
                   >
-                    <button className="w-12 h-12 rounded-full flex items-center justify-center bg-black/40">
+                    <button
+                      onClick={() =>
+                        toast.info("Video share feature coming soon")
+                      }
+                      className="w-12 h-12 rounded-full flex items-center justify-center bg-black/40"
+                    >
                       <Share className="w-7 h-7 text-white" />
                     </button>
                     <span className="text-white text-xs font-medium mt-1">
                       Share
-                    </span>
-                  </motion.div>
-
-                  {/* Remix button */}
-                  <motion.div
-                    className="flex flex-col items-center"
-                    whileTap={{ scale: 0.9 }}
-                  >
-                    <button className="w-12 h-12 rounded-full flex items-center justify-center bg-black/40">
-                      <Zap className="w-7 h-7 text-white" />
-                    </button>
-                    <span className="text-white text-xs font-medium mt-1">
-                      Remix
                     </span>
                   </motion.div>
 
@@ -492,14 +509,14 @@ export const VideoPlayer = ({
                   <div className="mt-2">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center border-2 border-white">
                       <span className="text-white font-bold text-sm">
-                        {video?.userName?.[0] || "T"}
+                        {video?.userName?.[0] || "X"}
                       </span>
                     </div>
                   </div>
                 </div>
 
                 {/* Bottom content - Mobile */}
-                <div className="absolute bottom-0 left-0 right-20 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
                   <div className="flex items-center space-x-3 mb-2">
                     <span className="text-white font-medium">
                       @{video?.userName || "Tigerspit"}

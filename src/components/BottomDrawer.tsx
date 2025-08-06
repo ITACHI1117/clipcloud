@@ -18,7 +18,6 @@ export const BottomDrawer = ({
   const handleLogOut = () => {
     router.push("auth/login");
     LogUserOut();
-    console.log("logged out");
     // routerServerGlobal.
   };
 

@@ -29,16 +29,16 @@ export const Drawer = ({ children, open, onOpenChange }) => {
 };
 
 export const DrawerContent = ({ children }) => (
-  <div className="bg-white rounded-t-3xl shadow-2xl max-h-[80vh] flex flex-col">
-    <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mt-3 mb-4" />
+  <div className="bg-background text-foreground rounded-t-3xl shadow-2xl max-h-[80vh] flex flex-col">
+    <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mt-3 mb-4 " />
     {children}
   </div>
 );
 
 export const DrawerHeader = ({ children }) => (
-  <div className="px-6 pb-4 border-b border-gray-100">{children}</div>
+  <div className="px-6 pb-4 border-b border-gray">{children}</div>
 );
 
 export const DrawerTitle = ({ children }) => (
-  <h2 className="text-lg font-semibold text-gray-900">{children}</h2>
+  <h2 className="text-lg font-semibold text-foreground-900">{children}</h2>
 );

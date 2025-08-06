@@ -74,18 +74,12 @@ export default function CreatorDashboard() {
   const myVideos = useGetMyVideos();
   useEffect(() => {
     if (myVideos.isSuccess) {
-      console.log(myVideos);
-      myVideos.data.filter((video) => {
-        console.log(video);
-      });
       setUserVideos(myVideos.data);
-      console.log(myVideos.data?.length);
     }
   }, [myVideos.isSuccess]);
 
   useEffect(() => {
     if (myVideos.isError) {
-      console.log(myVideos.error);
       toast.error("Error Loading videos😢", {
         description:
           "Please check your network and try again. Close this Message to try again",
@@ -94,10 +88,6 @@ export default function CreatorDashboard() {
       });
     }
   }, [myVideos.isError]);
-
-  useEffect(() => {
-    myVideos.isPending && console.log("loading");
-  }, [myVideos.isPending]);
 
   const DeleteVideo = useDeleteVideoByID();
 
@@ -190,15 +180,9 @@ export default function CreatorDashboard() {
   // log user out
   const handleLogOut = () => {
     LogUserOut();
-    console.log("logged out");
     router.push("auth/login");
     // routerServerGlobal.
   };
-
-  useEffect(() => {
-    console.log(view);
-    console.log({ data: [selectedVideo] });
-  }, [selectedVideo]);
 
   if (myVideos.isPending) {
     return <DashboardSkeletonLoader />;
@@ -338,11 +322,7 @@ export default function CreatorDashboard() {
                       >
                         <video
                           src={video.videoUrl}
-                          poster={
-                            video.thumbnailUrl
-                              ? video.thumbnailUrl
-                              : "/images/woman.jpg"
-                          }
+                          poster={video.thumbnailUrl}
                           className="w-full h-full object-cover"
                           muted
                           preload="metadata"
@@ -415,6 +395,7 @@ export default function CreatorDashboard() {
                           className="w-full h-full object-cover"
                           muted
                           preload="metadata"
+                          poster={video.thumbnailUrl}
                         />
                         <div className="absolute inset-0 flex items-center justify-center">
                           <Play className="w-6 h-6 text-white opacity-70" />
@@ -433,24 +414,10 @@ export default function CreatorDashboard() {
                             {video.genre}
                           </span>
                           <span>{formatDate(video.uploadedAt)}</span>
-                          <span className="flex items-center space-x-1">
-                            <Eye className="w-3 h-3" />
-                            {/* <span>{formatNumber(video.stats.views)} views</span> */}
-                          </span>
-                          <span className="flex items-center space-x-1">
-                            <Heart className="w-3 h-3" />
-                            {/* <span>{formatNumber(video.stats.likes)} likes</span> */}
-                          </span>
                         </div>
                       </div>
 
                       <div className="flex items-center space-x-2">
-                        <button className="p-2 hover:bg-accent rounded-lg transition-colors">
-                          <Edit3 className="w-4 h-4" />
-                        </button>
-                        <button className="p-2 hover:bg-accent rounded-lg transition-colors">
-                          <ExternalLink className="w-4 h-4" />
-                        </button>
                         <button
                           onClick={() => {
                             setVideoToDelete(video.id);

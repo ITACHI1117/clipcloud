@@ -42,7 +42,7 @@ export const UploadVideoComponent = ({
   setView?: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   const [isUploading, setIsUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
+  // const [uploadProgress, setUploadProgress] = useState(0);
   const [MAX_FILE_SIZE_MB] = useState(300);
 
   const router = useRouter();
@@ -60,11 +60,14 @@ export const UploadVideoComponent = ({
   const [newTag, setNewTag] = useState("");
   const [videoPreview, setVideoPreview] = useState(null);
   const [dragActive, setDragActive] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState("");
 
   const fileInputRef = useRef(null);
   const videoRef = useRef(null);
 
-  const UploadVideo = useCreateVideoPosts();
+  const UploadVideo = useCreateVideoPosts((progress) => {
+    setUploadProgress(progress);
+  });
 
   const genres = ["Comedy", "Music", "Sports", "Drama", "Tutorial", "Other"];
   const ageRatings = ["Everyone", "Teens", "Mature", "Restricted"];
@@ -127,16 +130,7 @@ export const UploadVideoComponent = ({
     if (!uploadData.title || !uploadData.genre || !uploadData.videoFile) return;
 
     setIsUploading(true);
-    const promise = UploadVideo.mutateAsync(uploadData);
-
-    toast.promise(promise, {
-      loading: "Uploading Video...",
-      success: (data) => {
-        router.back();
-        return `Your video has been Uploaded🎉`;
-      },
-      error: "Error Uploading Video Please try again",
-    });
+    await UploadVideo.mutateAsync(uploadData);
 
     // Reset form after successful upload
     setUploadData({
@@ -150,8 +144,18 @@ export const UploadVideoComponent = ({
     });
     setVideoPreview(null);
     setIsUploading(false);
-    setUploadProgress(0);
+    setUploadProgress("0");
+    router.back();
   };
+
+  useEffect(() => {
+    UploadVideo.isSuccess && toast.success("Video Uploaded");
+  }, [UploadVideo.isSuccess]);
+
+  useEffect(() => {
+    UploadVideo.isError &&
+      toast.error("Failed to upload video, Please try again");
+  }, [UploadVideo.isError]);
 
   const isFormValid =
     uploadData.title && uploadData.genre && uploadData.videoFile;
@@ -211,10 +215,10 @@ export const UploadVideoComponent = ({
 
       {/* Upload Progress */}
       {isUploading && (
-        <div className="border-b bg-muted/50 px-4 py-3">
-          <div className="container flex items-center gap-4">
+        <div className="border-b bg-muted/50 px-4 py-3 w-full fixed mt-15">
+          <div className="container flex items-center justify-center gap-4">
             <div className="flex-1">
-              <Progress value={uploadProgress} className="h-2" />
+              <Progress value={Number(uploadProgress)} className="h-2 " />
             </div>
             <span className="text-sm text-muted-foreground">
               {uploadProgress}%
@@ -223,7 +227,7 @@ export const UploadVideoComponent = ({
         </div>
       )}
 
-      <div className="container py-6">
+      <div className="container py-6 px-4 md:px-0 mt-5">
         <div className="grid gap-6 lg:grid-cols-2">
           {/* Video Upload Section */}
           <div className="space-y-6">
@@ -502,23 +506,25 @@ export const UploadVideoComponent = ({
             </Card>
           </div>
         </div>
-        <Button
-          onClick={handleUpload}
-          disabled={!isFormValid || isUploading}
-          className="gap-2 w-full mt-10 cursor-pointer"
-        >
-          {isUploading ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Uploading...
-            </>
-          ) : (
-            <>
-              <Upload className="h-4 w-4" />
-              Publish
-            </>
-          )}
-        </Button>
+        <div className="w-full px-4 md:px-0">
+          <Button
+            onClick={handleUpload}
+            disabled={!isFormValid || isUploading}
+            className="gap-2 w-full mt-10 cursor-pointer"
+          >
+            {isUploading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Uploading...
+              </>
+            ) : (
+              <>
+                <Upload className="h-4 w-4" />
+                Publish
+              </>
+            )}
+          </Button>
+        </div>
       </div>
     </div>
   );

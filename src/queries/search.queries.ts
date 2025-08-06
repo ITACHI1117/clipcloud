@@ -6,7 +6,6 @@ export const useSearch = (data, options) => {
     queryKey: ["search-videos", data],
     queryFn: async () => {
       const response = await SearchVideo(data);
-      console.log(response.data);
       return response.data;
     },
     ...options,
